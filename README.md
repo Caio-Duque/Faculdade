@@ -1,2 +1,2 @@
 # Faculdade
-Exercicios de disciplinas
+Exercícios de disciplinas
