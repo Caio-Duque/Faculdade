@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<script>
+    var selectedRow = null;
+
+    function onFormSubmit(){
+        var formData = readFormData();
+        if (selectedRow == null)
+            insertNewRecord(formData);
+        else
+            updateRecord(formData);
+        resetForm(formData);
+    }
+
+    function readFormData(){
+        var formData = {};
+        formData['nomeCompleto'] = document.getElementById('nomeCompleto').value;
+        formData['rgUsuario'] = document.getElementById('rgUsuario').value;
+        formData['numTel'] = document.getElementById('numTel').value;
+        formData['nivelAcesso'] = document.getElementById('nivelAcesso').value;
+        formData['loginUsuario'] = document.getElementById('loginUsuario').value;
+        formData['senhaUsuario'] = document.getElementById('senhaUsuario').value;
+        return formData;
+    }
+
+    function insertNewRecord(data){
+        var table = document.getElementById('listaFuncionarios').getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.length);
+        cell1 = newRow.insertCell(0);
+        cell1.innerHTML = data.nomeCompleto;
+        cell2 = newRow.insertCell(1);
+        cell2.innerHTML = data.rgUsuario;
+        cell2 = newRow.insertCell(2);
+        cell2.innerHTML = data.numTel;
+        cell3 = newRow.insertCell(3);
+        cell3.innerHTML = data.nivelAcesso;
+        cell4 = newRow.insertCell(4);
+        cell4.innerHTML = data.loginUsuario;
+        cell5 = newRow.insertCell(5);
+        cell5.innerHTML = data.senhaUsuario;
+        cell5 = newRow.insertCell(6);
+        cell5.innerHTML = `<a onClick='onEdit(this)'>Editar</a>
+                           <a onClick='onDelete(this)'>Remover</a>`;
+    }
+
+    function resetForm(){
+        document.getElementById('nomeCompleto').value='';
+        document.getElementById('rgUsuario').value='';
+        document.getElementById('numTel').value='';
+        document.getElementById('loginUsuario').value='';
+        document.getElementById('senhaUsuario').value='';
+        selectedRow = null;
+    }
+
+    function onEdit(td){
+        selectedRow = td.parentElement.parentElement;
+        document.getElementById('nomeCompleto').value = selectedRow.cells[0].innerHTML;
+        document.getElementById('rgUsuario').value = selectedRow.cells[1].innerHTML;
+        document.getElementById('numTel').value = selectedRow.cells[2].innerHTML;
+        document.getElementById('nivelAcesso').value = selectedRow.cells[3].innerHTML;
+        document.getElementById('loginUsuario').value = selectedRow.cells[4].innerHTML;
+        document.getElementById('senhaUsuario').value = selectedRow.cells[5].innerHTML;
+    }
+
+    function updateRecord(formData){
+        selectedRow.cells[0].innerHTML = formData.nomeCompleto;
+        selectedRow.cells[1].innerHTML = formData.rgUsuario;
+        selectedRow.cells[2].innerHTML = formData.numTel;
+        selectedRow.cells[3].innerHTML = formData.nivelAcesso;
+        selectedRow.cells[4].innerHTML = formData.loginUsuario;
+        selectedRow.cells[5].innerHTML = formData.senhaUsuario;
+    }
+
+    function onDelete(td){
+        if (confirm('Deseja excluir esse usuário? Essa ação não poderá ser desfeita.')){
+            row = td.parentElement.parentElement;
+            document.getElementById('listaFuncionarios').deleteRow(row.rowIndex);
+            resetForm();
+        }
+    }
+</script>
+
+<head>
+    <style>
+        body > table{
+            width: 80%;
+        }
+
+        table{
+            border-collapse: collapse;
+        }
+        table.list{
+            width:100%;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even),table.list thead>tr {
+            background-color: #dddddd;
+        }
+
+        input[type=text], input[type=number] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit]{
+            width: 30%;
+            background-color: rgb(33, 143, 0);
+            color: rgb(255, 255, 255);
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: black;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form div.form-action-buttons{
+            text-align: right;
+        }
+
+        a{
+            cursor: pointer;
+            text-decoration: underline;
+            color: #0000ee;
+            margin-right: 4px;
+        }
+
+        label.validation-error{
+            color:   red;
+            margin-left: 5px;
+        }
+
+        .hide{
+            display:none;
+        }
+    </style>
+        <title>
+            Manter Usuário
+        </title>
+</head>
+
+<body>
+    <h1 style="font-family: 'Courier New', Courier, monospace; font: bold;">Restaurante Big Kahuna - Cadastro de usuários</h1>
+    <table>
+        <tr>
+            <td>
+                <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+                    <div>
+                        <label>Nome completo</label>
+                        <input required type="text" name="nomeCompleto" id="nomeCompleto" placeholder="digite o nome completo">
+                    </div>
+                    <div>
+                        <label>RG</label>
+                        <input required type="number" name="rgUsuario" id="rgUsuario" placeholder="somente números">
+                    </div>
+                    <div>
+                        <label>Telefone</label>
+                        <input type="number" name="numTel" id="numTel" placeholder="somente números">
+                    </div>
+                    <div>
+                        <label>Nível de acesso</label>
+                        <select required id="nivelAcesso">
+                            <option value="admin">Administrador</option>
+                            <option value="garcom">Garçom</option>
+                            <option value="cozinha">Cozinha</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Login</label>
+                        <input required type="text" name="loginUsuario" id="loginUsuario" placeholder="digite o login">
+                    </div>
+                    <div>
+                        <label>Senha</label>
+                        <input required type="text" name="senhaUsuario" id="senhaUsuario" placeholder="digite a senha">
+                    </div>
+                    <div class="form-action-buttons">
+                        <input type="submit" value="Cadastrar">
+                    </div>
+                </form>
+            </td>
+            <td>
+                <table class="list" id="listaFuncionarios">
+                    <thead>
+                        <tr>
+                            <th>Nome completo</th>
+                            <th>RG</th>
+                            <th>Telefone</th>
+                            <th>Nível de acesso</th>
+                            <th>Login</th>
+                            <th>Senha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

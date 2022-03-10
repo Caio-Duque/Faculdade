@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<script>
+    var selectedRow = null;
+
+    function onFormSubmit(){
+        var formData = readFormData();
+        if (selectedRow == null)
+            insertNewRecord(formData);
+        else
+            updateRecord(formData);
+        resetForm(formData);
+    }
+
+    function readFormData(){
+        var formData = {};
+        formData['nomeProduto'] = document.getElementById('nomeProduto').value;
+        formData['categoriaProd'] = document.getElementById('categoriaProd').value;
+        formData['precoProduto'] = document.getElementById('precoProduto').value;
+        formData['ingredProduto'] = document.getElementById('ingredProduto').value;
+        formData['pesoProduto'] = document.getElementById('pesoProduto').value;
+        formData['volumeProduto'] = document.getElementById('volumeProduto').value;
+
+        return formData;
+    }
+
+    function insertNewRecord(data){
+        var table = document.getElementById('listaCardapio').getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.length);
+        cell1 = newRow.insertCell(0);
+        cell1.innerHTML = data.nomeProduto;
+        cell2 = newRow.insertCell(1);
+        cell2.innerHTML = data.categoriaProd;
+        cell4 = newRow.insertCell(2);
+        cell4.innerHTML = data.precoProduto;
+        cell3 = newRow.insertCell(3);
+        cell3.innerHTML = data.ingredProduto;
+        cell5 = newRow.insertCell(4);
+        cell5.innerHTML = data.pesoProduto;
+        cell5 = newRow.insertCell(5);
+        cell5.innerHTML = data.volumeProduto;
+        cell5 = newRow.insertCell(6);
+        cell5.innerHTML = `<button onClick='onEdit(this)' type='button'>Editar</a>
+                           <button onClick='onDelete(this)' type='button'>Remover</a>`;
+    }
+
+    function resetForm(){
+        document.getElementById('nomeProduto').value='';
+        document.getElementById('precoProduto').value='';
+        document.getElementById('ingredProduto').value='';
+        document.getElementById('pesoProduto').value='';
+        document.getElementById('volumeProduto').value='';
+
+        selectedRow = null;
+    }
+
+    function onEdit(td){
+        selectedRow = td.parentElement.parentElement;
+        document.getElementById('nomeProduto').value = selectedRow.cells[0].innerHTML;
+        document.getElementById('categoriaProd').value = selectedRow.cells[1].innerHTML;
+        document.getElementById('precoProduto').value = selectedRow.cells[2].innerHTML;
+        document.getElementById('ingredProduto').value = selectedRow.cells[3].innerHTML;
+        document.getElementById('pesoProduto').value = selectedRow.cells[4].innerHTML;
+        document.getElementById('volumeProduto').value = selectedRow.cells[5].innerHTML;
+    }
+
+    function updateRecord(formData){
+        selectedRow.cells[0].innerHTML = formData.nomeProduto;
+        selectedRow.cells[1].innerHTML = formData.categoriaProd;
+        selectedRow.cells[2].innerHTML = formData.precoProduto;
+        selectedRow.cells[3].innerHTML = formData.ingredProduto;
+        selectedRow.cells[4].innerHTML = formData.pesoProduto;
+        selectedRow.cells[5].innerHTML = formData.volumeProduto;
+
+    }
+
+    function onDelete(td){
+        if (confirm('Deseja excluir esse usuário? Essa ação não poderá ser desfeita.')){
+            row = td.parentElement.parentElement;
+            document.getElementById('listaCardapio').deleteRow(row.rowIndex);
+            resetForm();
+        }
+    }
+</script>
+
+<head>
+    <style>
+        body > table{
+            width: 80%;
+        }
+
+        table{
+            border-collapse: collapse;
+        }
+        table.list{
+            width:100%;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even),table.list thead>tr {
+            background-color: #dddddd;
+        }
+
+        input[type=text], input[type=number] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit]{
+            width: 100%;
+            background-color: rgb(33, 143, 0);
+            color: rgb(255, 255, 255);
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: black;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form div.form-action-buttons{
+            text-align: right;
+        }
+
+        a{
+            cursor: pointer;
+            text-decoration: underline;
+            color: #0000ee;
+            margin-right: 4px;
+        }
+
+        label.validation-error{
+            color:   red;
+            margin-left: 5px;
+        }
+
+        .hide{
+            display:none;
+        }
+    </style>
+        <title>
+            Manter Cardápio
+        </title>
+</head>
+
+<body>
+    <h1 style="font-family: 'Courier New', Courier, monospace; font: bold;">Restaurante Big Kahuna - Cadastro de produtos no cardápio</h1>
+    <table>
+        <tr>
+            <td>
+                <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+                    <div>
+                        <label>Nome do produto</label>
+                        <input required type="text" name="nomeProduto" id="nomeProduto" placeholder="prato presidencial">
+                    </div>
+                    <div>
+                        <label>Categoria do produto</label>
+                        <select id="categoriaProd" required>
+                            <option value="prato">Prato</option>
+                            <option value="bebida">Bebida</option>
+                            <option value="sobremesa">Sobremesa</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Preço do produto</label>
+                        <input required type="number" name="precoProduto" id="precoProduto" step="0.01" placeholder="10.50">
+                    </div>
+
+                    <div>
+                        <label>Ingredientes do produto</label>
+                        <input type="text" id="ingredProduto" placeholder="arroz, feijao, carne vermelha, farofa">
+                    </div>
+
+                    <div>
+                        <label>Peso do produto</label>
+                        <input type="number" name="pesoProduto" id="pesoProduto" step="0.01" placeholder="em gramas">
+                    </div>
+                    <div>
+                        <label>Volume do produto</label>
+                        <input type="number" name="volumeProduto" id="volumeProduto" step="0.01" placeholder="em mL">
+                    </div>
+                    <div class="form-action-buttons">
+                        <input type="submit" value="Cadastrar">
+                    </div>
+                </form>
+            </td>
+            <td>
+                <table class="list" id="listaCardapio">
+                    <thead>
+                        <tr>
+                            <th>Nome do produto</th>
+                            <th>Categoria do produto</th>
+                            <th>Preço do produto</th>
+                            <th>Ingredientes do produto</th>
+                            <th>Peso do produto</th>
+                            <th>Volume do produto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

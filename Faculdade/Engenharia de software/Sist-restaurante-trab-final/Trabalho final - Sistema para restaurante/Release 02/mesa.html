@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<script>
+    var selectedRow = null;
+
+    function onFormSubmit(){
+        var formData = readFormData();
+        if (selectedRow == null)
+            insertNewRecord(formData);
+        else
+            updateRecord(formData);
+        resetForm(formData);
+    }
+
+    function readFormData(){
+        var formData = {};
+        formData['nroMesa'] = document.getElementById('nroMesa').value;
+        formData['escProduto'] = document.getElementById('escProduto').value;
+        formData['unidades'] = document.getElementById('unidades').value;
+        formData['obs'] = document.getElementById('obs').value;
+        return formData;
+    }
+
+    function insertNewRecord(data){
+        var table = document.getElementById('listaMesa').getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.length);
+        cell1 = newRow.insertCell(0);
+        cell1.innerHTML = data.nroMesa;
+        cell2 = newRow.insertCell(1);
+        cell2.innerHTML = data.escProduto;
+        cell3 = newRow.insertCell(2);
+        cell3.innerHTML = data.unidades;
+        cell4 = newRow.insertCell(3);
+        cell4.innerHTML = data.obs;
+        cell5 = newRow.insertCell(4);
+        cell5.innerHTML = `<a onClick='onEdit(this)'>Editar</a>
+                           <a onClick='onDelete(this)'>Remover</a>`;
+    }
+
+    function resetForm(){
+        document.getElementById('nroMesa').value='';
+        document.getElementById('escProduto').value='';
+        document.getElementById('unidades').value='';
+        document.getElementById('obs').value='';
+        selectedRow = null;
+    }
+
+    function onEdit(td){
+        selectedRow = td.parentElement.parentElement;
+        document.getElementById('nroMesa').value = selectedRow.cells[0].innerHTML;
+        document.getElementById('escProduto').value = selectedRow.cells[1].innerHTML;
+        document.getElementById('unidades').value = selectedRow.cells[2].innerHTML;
+        document.getElementById('obs').value = selectedRow.cells[3].innerHTML;
+    }
+
+    function updateRecord(formData){
+        selectedRow.cells[0].innerHTML = formData.nroMesa;
+        selectedRow.cells[1].innerHTML = formData.escProduto;
+        selectedRow.cells[2].innerHTML = formData.unidades;
+        selectedRow.cells[3].innerHTML = formData.obs;
+    }
+
+    function onDelete(td){
+        if (confirm('Deseja excluir esse usuário? Essa ação não poderá ser desfeita.')){
+            row = td.parentElement.parentElement;
+            document.getElementById('listaMesa').deleteRow(row.rowIndex);
+            resetForm();
+        }
+    }
+</script>
+
+<head>
+    <style>
+        body > table{
+            width: 80%;
+        }
+
+        table{
+            border-collapse: collapse;
+        }
+        table.list{
+            width:100%;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even),table.list thead>tr {
+            background-color: #dddddd;
+        }
+
+        input[type=text], input[type=number] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit]{
+            width: 30%;
+            background-color: rgb(33, 143, 0);
+            color: rgb(255, 255, 255);
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: black;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form div.form-action-buttons{
+            text-align: right;
+        }
+
+        a{
+            cursor: pointer;
+            text-decoration: underline;
+            color: #0000ee;
+            margin-right: 4px;
+        }
+
+        label.validation-error{
+            color:   red;
+            margin-left: 5px;
+        }
+
+        .hide{
+            display:none;
+        }
+    </style>
+        <title>
+            Manter Mesa
+        </title>
+</head>
+
+<body>
+    <h1 style="font-family: 'Courier New', Courier, monospace; font: bold;">Restaurante Big Kahuna - Cadastro de pedidos</h1>
+    <table>
+        <tr>
+            <td>
+                <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+                    <div>
+                        <label>Número da mesa</label>
+                        <input required type="number" name="nroMesa" id="nroMesa" placeholder="12">
+                    </div>
+                    <div>
+                        <label>Produto</label>
+                        <select required id="escProduto">
+                            <option value="prato da casa">Prato da casa</option>
+                            <option value="prato presidencial">Prato presidencial</option>
+                            <option value="coca cola">Coca cola</option>
+                            <option value="pepsi">Pepsi</option>
+                            <option value="bolo de pote">Bolo de pote</option>
+                            <option value="banana split">Banana split</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Unidades</label>
+                        <input required type="number" name="unidades" id="unidades" placeholder="1">
+                    </div>
+                    <div>
+                    <div>
+                        <label>Observações</label>
+                        <input type="text" name="obs" id="obs" placeholder="carne mal passada">
+                    </div>
+                    <div class="form-action-buttons">
+                        <input type="submit" value="Cadastrar Pedido">
+                    </div>
+                </form>
+            </td>
+            <td>
+                <table class="list" id="listaMesa">
+                    <thead>
+                        <tr>
+                            <th>Número da mesa</th>
+                            <th>Pedido</th>
+                            <th>Unidades</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
